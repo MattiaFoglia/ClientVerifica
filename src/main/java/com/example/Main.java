@@ -13,29 +13,40 @@ public class Main {
         try {
             Scanner sc = new Scanner(System.in);
             Socket mySocket;
-            mySocket = new Socket("localhost", 3000); 
+            mySocket = new Socket("localhost", 3000);
             String stringRead = "";
             BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-            DataOutputStream out = new DataOutputStream(mySocket.getOutputStream    ());
+            DataOutputStream out = new DataOutputStream(mySocket.getOutputStream());
             do {
                 System.out.println("Insert number: ");
-
                 String outputString = sc.nextLine();
+                out.writeBytes(outputString + '\n');
+
                 stringRead = in.readLine();
-                System.out.println("the number is received : " + stringRead);
-                
 
+                switch (stringRead) {
+                    case ">":
+                        System.out.println("troppo grande");
+                        break;
+                    case "<":
+                        System.out.println("troppo piccolo");
+                        break;
+                    case "=":
+                        stringRead = in.readLine();
+                        System.out.println("Numero esatto!" + "" +stringRead);
 
-                if (outputString.equals("!")) {
-                    out.writeBytes(outputString + '\n');
-                    System.out.println("Server Closed");                    
-                    break;                
+                        System.out.println("Vuoi rigiocare? premere y/n") ;
+                        outputString = sc.nextLine();
+                        out.writeBytes( outputString + '\n');
+                        break;
+                    default:
+                       
+                    System.out.println("Error") ;
+                    break;
                 }
-                
 
-            } while(true);
-            mySocket.close();
-            sc.close();
+            } while (true);
+
         } catch (UnknownHostException e) {
             System.out.println("ERROR");
             e.printStackTrace();
